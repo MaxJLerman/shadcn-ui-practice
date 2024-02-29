@@ -1,61 +1,44 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { ShoppingBag } from "lucide-react";
+
+import { Container } from "@/components/Container";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-
-interface Recipe {
-  title: string;
-  image: string;
-  time: number;
-  description: string;
-  vegan: boolean;
-  id: string;
-}
-
-const getRecipes = async (): Promise<Recipe[]> => {
-  const result = await fetch("http://localhost:4000/recipes");
-
-  // delayed response
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
-  return result.json();
-};
+import { ProductList } from "@/components/ProductList";
+import { products } from "@/data/products.data";
 
 export default async function Home() {
-  const recipes = await getRecipes();
-
   return (
-    <main>
-      <div className={"grid grid-cols-3 gap-8"}>
-        {recipes.map((recipe) => (
-          <Card key={recipe.id} className={"flex flex-col justify-between"}>
-            <CardHeader className={"flex-row gap-4 items-center"}>
-              <Avatar>
-                <AvatarImage src={`/img/${recipe.image}`} alt={"recipe img"} />
-                <AvatarFallback>{recipe.title.slice(0, 2)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <CardTitle>{recipe.title}</CardTitle>
-                <CardDescription>{recipe.time} mins to cook</CardDescription>
+    <Container>
+      <div className={"space-y-10 pb-10"}>
+        <div className={"p-4 sm:p-6 lg:p-8 rounded-lg overflow-hidden"}>
+          <div
+            style={{ backgroundImage: "url(/img/hero-1920x1080.jpg)" }}
+            className={
+              "rounded-lg relative aspect-square md:aspect-[2.4/1] overflow-hidden bg-cover"
+            }
+          >
+            <div
+              className={
+                "h-full w-full flex flex-col justify-center items-center text-center gap-y-8"
+              }
+            >
+              <div
+                className={
+                  "font-bold text-3xl sm:text-5xl lg:text-6xl sm:max-w-xl max-w-xs text-black dark:text-white bg-secondary/60 p-4 rounded-lg"
+                }
+              >
+                Featured Products
+                <Button size={"lg"} className={"w-full py-6 text-xl"}>
+                  <ShoppingBag className={"mr-2"} />
+                  Shop Now
+                </Button>
               </div>
-            </CardHeader>
-            <CardContent>
-              <p>{recipe.description}</p>
-            </CardContent>
-            <CardFooter className={"flex justify-between"}>
-              <Button>View Recipe</Button>
-              {recipe.vegan && <Badge variant={"secondary"}>Vegan!</Badge>}
-            </CardFooter>
-          </Card>
-        ))}
+            </div>
+          </div>
+        </div>
+        <div className={"flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8"}>
+          <ProductList items={products} />
+        </div>
       </div>
-    </main>
+    </Container>
   );
 }
